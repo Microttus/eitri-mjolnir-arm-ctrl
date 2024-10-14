@@ -44,6 +44,9 @@ class ServoNode(Node):
 
         self.arm_control = MjolnirArmControl()
         self.arm_inv_control = RoboticArmIK(0.065, 0.35, 0.304)
+        self.theta1 = 90
+        self.theta2 = 90
+        self.theta3 = 90
 
         # Subscribe to the Twist topic
         self.subscription = self.create_subscription(
@@ -77,15 +80,15 @@ class ServoNode(Node):
         solution = self.arm_inv_control.inverse_kinematics(self.arm_control.tool_pos[0], self.arm_control.tool_pos[1], self.arm_control.tool_pos[2])
 
         if solution != None:
-            theta1 = int(solution[0][0])
-            theta2 = int(solution[0][1])
-            theta3 = int(solution[0][2])
-            print(f"1: {theta1}, 2: {theta2}, 3: {theta3}")
+            self.theta1 = int(solution[0][0])
+            self.theta2 = int(solution[0][1])
+            self.theta3 = int(solution[0][2])
+            #print(f"1: {self.theta1}, 2: {theta2}, 3: {theta3}")
         else:
             print("No valid solution")
 
 
-        servo_motor_pos = {theta1, theta2, theta3, 90, 90, 90}
+        servo_motor_pos = {self.theta1, self.theta2, self.theta3, 90, 90, 90}
         # Send servo positions
         try:
             #self.servo_controller.send_servo_values(self.arm_control.motor_pos)
