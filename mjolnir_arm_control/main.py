@@ -66,7 +66,7 @@ class ServoNode(Node):
         # Map linear velocities to servos 1-3
         servo_positions[0] = msg.linear.x
         servo_positions[1] = msg.linear.y
-        servo_positions[2] = msg.linear.z
+        servo_positions[2] = msg.angular.z #msg.linear.z
 
         # Map angular velocities to servos 4-6
         servo_positions[3] = msg.angular.x
