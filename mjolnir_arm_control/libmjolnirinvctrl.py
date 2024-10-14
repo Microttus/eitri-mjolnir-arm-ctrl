@@ -96,7 +96,9 @@ class RoboticArmIK:
                 continue  # Skip if an error occurs
 
         if not solutions:
-            raise ValueError("No valid solutions found for the given position.")
+            #raise ValueError("No valid solutions found for the given position.")
+            print("No valid solutions found for the given position.")
+            return None
 
         return solutions
 

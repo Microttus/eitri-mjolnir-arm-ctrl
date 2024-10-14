@@ -72,11 +72,11 @@ class ServoNode(Node):
 
         #self.arm_control.calculate_joint_vel_array(servo_positions)
         self.arm_control.integrate_tool_pos(servo_positions)
+
+        print(f"Servo positions: {self.arm_control.tool_pos}")
         solution = self.arm_inv_control.inverse_kinematics(self.arm_control.tool_pos[0], self.arm_control.tool_pos[1], self.arm_control.tool_pos[2])
 
-
-
-        if len(solution) != 0:
+        if solution != None:
             theta1 = int(solution[0][0])
             theta2 = int(solution[0][1])
             theta3 = int(solution[0][2])
