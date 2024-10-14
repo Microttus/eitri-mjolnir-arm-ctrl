@@ -37,6 +37,9 @@ class ServoNode(Node):
             self.destroy_node()
             return
 
+        self.servo_controller.send_servo_values([90,90,90,90,90,90])
+        self.get_logger().info(f"Sent initial position to arm controller on port {serial_port}")
+
         self.arm_control = MjolnirArmControl()
 
         # Subscribe to the Twist topic
