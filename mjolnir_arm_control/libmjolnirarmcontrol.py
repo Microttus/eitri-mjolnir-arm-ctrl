@@ -26,6 +26,9 @@ class MjolnirArmControl:
                                  [0, 0, 0, 0, 1, 0],
                                  [0, 0, 0, 0, 0, 1]])
 
+        self.tool_vel = np.array([0, 0, 0, 0, 0, 0])
+        self.tool_pos = np.array([90, 90, 90, 90, 90, 90])
+
     def calculate_joint_vel(self, x, y, z, ax, ay, az):
         cartesian_vel = np.array([x, y, z, ax, ay, az])
         self.motor_vel = np.matmul(self.inv_jac, cartesian_vel)
@@ -38,4 +41,9 @@ class MjolnirArmControl:
         loop_time = t.time() - self.last_time
         self.last_time = t.time()
         self.motor_pos = self.motor_pos + (self.motor_vel * loop_time)
+
+    def integrate_tool_pos(self, tool_vel_in):
+        loop_time = t.time() - self.last_time
+        self.last_time = t.time()
+        self.tool_pos = self.tool_pos + (tool_vel_in * loop_time)
 

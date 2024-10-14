@@ -6,7 +6,7 @@
 #
 
 import rclpy
-from rcl.node import Node
+from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from libserialservo import ServoController
 from libmjolnirarmcontrol import MjolnirArmControl
@@ -67,7 +67,10 @@ class ServoNode(Node):
         servo_positions[4] = msg.angular.y
         servo_positions[5] = msg.angular.z
 
-        self.arm_control.calculate_joint_vel_array(servo_positions)
+        #self.arm_control.calculate_joint_vel_array(servo_positions)
+        self.arm_control.integrate_tool_pos(servo_positions)
+
+
 
         # Send servo positions
         try:
