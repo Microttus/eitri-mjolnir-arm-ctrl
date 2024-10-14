@@ -10,6 +10,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from mjolnir_arm_control.libserialservo import ServoController
 from mjolnir_arm_control.libmjolnirarmcontrol import MjolnirArmControl
+from mjolnir_arm_control.libmjolnirinvctrl import RoboticArmIK
 
 class ServoNode(Node):
     def __init__(self):
@@ -41,6 +42,7 @@ class ServoNode(Node):
         self.get_logger().info(f"Sent initial position to arm controller on port {serial_port}")
 
         self.arm_control = MjolnirArmControl()
+        self.arm_inv_control = RoboticArmIK(0.065, 0.35, 0.304)
 
         # Subscribe to the Twist topic
         self.subscription = self.create_subscription(
@@ -69,6 +71,17 @@ class ServoNode(Node):
 
         #self.arm_control.calculate_joint_vel_array(servo_positions)
         self.arm_control.integrate_tool_pos(servo_positions)
+        solution = self.arm_inv_control.inverse_kinematics(self.arm_control.tool_pos[0], self.arm_control.tool_pos[1], self.arm_control.tool_pos[2])
+
+
+
+        if len(solution) != 0:
+            theta1 = int(solution[0][0])
+            theta2 = int(solution[0][1])
+            theta3 = int(solution[0][2])
+            print(f"1: {theta1}, 2: {theta2}, 3: {theta3}")
+        else:
+            print("No valid solution")
 
 
 

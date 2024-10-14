@@ -57,7 +57,7 @@ class RoboticArmIK:
 
         # Initial guesses (in radians)
         initial_guesses = [
-            [np.deg2rad(45), np.deg2rad(45)],
+            [np.deg2rad(50), np.deg2rad(-140)],
             [np.deg2rad(-45), np.deg2rad(-45)],
             [np.deg2rad(135), np.deg2rad(45)],
             [np.deg2rad(-135), np.deg2rad(-45)],

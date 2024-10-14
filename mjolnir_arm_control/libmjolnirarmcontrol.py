@@ -27,7 +27,7 @@ class MjolnirArmControl:
                                  [0, 0, 0, 0, 0, 1]])
 
         self.tool_vel = np.array([0, 0, 0, 0, 0, 0])
-        self.tool_pos = np.array([90, 90, 90, 90, 90, 90])
+        self.tool_pos = np.array([0.30, 0.0, 0.20, 0, 0, 0])
 
     def calculate_joint_vel(self, x, y, z, ax, ay, az):
         cartesian_vel = np.array([x, y, z, ax, ay, az])
