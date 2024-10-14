@@ -15,7 +15,7 @@ setup(
         # Include all launch files
         (os.path.join('share', package_name, 'launch'), glob('launch/*.py')),
     ],
-    install_requires=['setuptools', 'pyserial', 'numpy'],
+    install_requires=['setuptools', 'pyserial', 'numpy', 'scipy'],
     zip_safe=True,
     maintainer='oktma',
     maintainer_email='martino@uia.no',
