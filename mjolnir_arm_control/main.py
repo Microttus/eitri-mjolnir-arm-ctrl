@@ -8,6 +8,7 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+import numpy as np
 from mjolnir_arm_control.libserialservo import ServoController
 from mjolnir_arm_control.libmjolnirarmcontrol import MjolnirArmControl
 from mjolnir_arm_control.libmjolnirinvctrl import RoboticArmIK
@@ -57,7 +58,7 @@ class ServoNode(Node):
     def twist_callback(self, msg):
         # Process the Twist message and compute servo positions
         # Map velocities to servo positions
-        servo_positions = [90] * 6  # Default positions
+        servo_positions = np.array([90,90,90,90,90,90])  # Default positions
 
         # Map linear velocities to servos 1-3
         servo_positions[0] = msg.linear.x
