@@ -85,11 +85,12 @@ class ServoNode(Node):
             print("No valid solution")
 
 
-
+        servo_motor_pos = {theta1, theta2, theta3, 90, 90, 90}
         # Send servo positions
         try:
-            self.servo_controller.send_servo_values(self.arm_control.motor_pos)
-            self.get_logger().info(f"Sent servo positions: {self.arm_control.motor_pos}")
+            #self.servo_controller.send_servo_values(self.arm_control.motor_pos)
+            self.servo_controller.send_servo_values(servo_motor_pos)
+            self.get_logger().info(f"Sent servo positions: {servo_motor_pos}")
         except Exception as e:
             self.get_logger().error(f"Error sending servo positions: {e}")
 
