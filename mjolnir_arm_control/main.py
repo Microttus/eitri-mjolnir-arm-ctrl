@@ -8,8 +8,8 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
-from libserialservo import ServoController
-from libmjolnirarmcontrol import MjolnirArmControl
+from mjolnir_arm_control.libserialservo import ServoController
+from mjolnir_arm_control.libmjolnirarmcontrol import MjolnirArmControl
 
 class ServoNode(Node):
     def __init__(self):
