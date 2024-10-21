@@ -62,17 +62,19 @@ class ServoNode(Node):
     def twist_callback(self, msg):
         # Process the Twist message and compute servo positions
         # Map velocities to servo positions
-        servo_positions = np.array([90,90,90,90,90,90])  # Default positions
+        servo_positions = np.array([90.0,90.0,90.0,90.0,90.0,90.0])  # Default positions
 
         # Map linear velocities to servos 1-3
         servo_positions[0] = msg.linear.x
         servo_positions[1] = msg.linear.y
-        servo_positions[2] = msg.angular.z #msg.linear.z
+        servo_positions[2] = msg.linear.z
 
         # Map angular velocities to servos 4-6
         servo_positions[3] = msg.angular.x
         servo_positions[4] = msg.angular.y
         servo_positions[5] = msg.angular.z
+
+        print(f"Received x:{msg.linear.x,} og y:{msg.linear.y}")
 
         #self.arm_control.calculate_joint_vel_array(servo_positions)
         self.arm_control.integrate_tool_pos(servo_positions)
