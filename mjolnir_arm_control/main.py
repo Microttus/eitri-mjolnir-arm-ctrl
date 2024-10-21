@@ -94,7 +94,7 @@ class ServoNode(Node):
         #self.arm_control.calculate_joint_vel_array(servo_positions)
         self.arm_control.integrate_tool_pos(self.tool_vel)
 
-        print(f"Tool positions: {round(self.arm_control.tool_pos,2)}")
+        print(f"Tool positions: {round(self.arm_control.tool_pos[0],2), round(self.arm_control.tool_pos[1],2), round(self.arm_control.tool_pos[2],2)}")
         solution = self.arm_inv_control.inverse_kinematics(self.arm_control.tool_pos[0], self.arm_control.tool_pos[1], self.arm_control.tool_pos[2])
 
         if solution != None:
