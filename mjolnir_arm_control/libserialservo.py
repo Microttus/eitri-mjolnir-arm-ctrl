@@ -45,7 +45,7 @@ class ServoController:
 
         try:
             self.serial_connection.write(servo_data.encode())
-            time.sleep(0.2)
+            time.sleep(0.1)
             print(f"Sent servo data: {servo_data}")
         except serial.SerialTimeoutException as e:
             print(f"Failed to send data: {e}")

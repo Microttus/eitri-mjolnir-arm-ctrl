@@ -30,6 +30,8 @@ class ServoNode(Node):
         self.max_linear_velocity = self.get_parameter('max_linear_velocity').value
         self.max_angular_velocity = self.get_parameter('max_angular_velocity').value
 
+        self.dead_band = 0.01
+
         # Initialize the servo controller
         self.servo_controller = ServoController(port=serial_port, baud_rate=baud_rate)
         try:
@@ -65,9 +67,12 @@ class ServoNode(Node):
         servo_positions = np.array([90.0,90.0,90.0,90.0,90.0,90.0])  # Default positions
 
         # Map linear velocities to servos 1-3
-        servo_positions[0] = msg.linear.x
-        servo_positions[1] = msg.linear.y
-        servo_positions[2] = msg.linear.z
+        if self.dead_band < msg.linear.x < -self.dead_band:
+            servo_positions[0] = msg.linear.x
+        if self.dead_band > msg.linear.y > self.dead_band:
+            servo_positions[1] = msg.linear.y
+        if self.dead_band < msg.linear.z < -self.dead_band:
+            servo_positions[2] = msg.linear.z
 
         # Map angular velocities to servos 4-6
         servo_positions[3] = msg.angular.x
