@@ -47,6 +47,7 @@ class ServoNode(Node):
         self.theta1 = 90
         self.theta2 = 90
         self.theta3 = 90
+        self.theta4 = 90
 
         # Subscribe to the Twist topic
         self.subscription = self.create_subscription(
@@ -88,9 +89,9 @@ class ServoNode(Node):
         else:
             print("No valid solution")
 
+        # Array the solution
+        servo_motor_pos = np.array([self.theta1, self.theta2, self.theta3, self.theta4, 90, 90])
 
-        servo_motor_pos = np.array([self.theta1, self.theta2, self.theta3, 90, 90, 90])
-        print("Servomotor pos: {servo_motor_pos}")
         # Send servo positions
         try:
             #self.servo_controller.send_servo_values(self.arm_control.motor_pos)
