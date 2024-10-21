@@ -45,6 +45,6 @@ class MjolnirArmControl:
     def integrate_tool_pos(self, tool_vel_in: np.array):
         loop_time = t.time() - self.last_time
         self.last_time = t.time()
-        if loop_time > 0:
+        if loop_time > 0 and loop_time < 0.5:
             self.tool_pos = self.tool_pos + (tool_vel_in * loop_time)
 
