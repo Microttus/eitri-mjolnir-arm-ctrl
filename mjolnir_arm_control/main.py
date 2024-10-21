@@ -67,17 +67,17 @@ class ServoNode(Node):
         # Map velocities to servo positions
 
         # Map linear velocities to servos 1-3
-        if self.dead_band < msg.linear.x < -self.dead_band:
+        if self.dead_band < msg.linear.x or msg.linear.x < -self.dead_band:
             self.tool_vel[0] = msg.linear.x
         else:
             self.tool_vel[0] = 0
 
-        if self.dead_band > msg.linear.y > self.dead_band:
+        if self.dead_band < msg.linear.y or msg.linear.y < -self.dead_band:
             self.tool_vel[1] = msg.linear.y
         else:
             self.tool_vel[1] = 0
 
-        if self.dead_band < msg.linear.z < -self.dead_band:
+        if self.dead_band < msg.linear.z or msg.linear.z < -self.dead_band:
             self.tool_vel[2] = msg.linear.z
         else:
             self.tool_vel[2] = 0
