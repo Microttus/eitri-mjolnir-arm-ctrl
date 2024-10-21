@@ -31,6 +31,7 @@ class ServoNode(Node):
         self.max_angular_velocity = self.get_parameter('max_angular_velocity').value
 
         self.dead_band = 0.01
+        self.tool_vel =  np.array([ 0.1, 0.0, 0.1, 0.0, 0.0, 0.0])
 
         # Initialize the servo controller
         self.servo_controller = ServoController(port=serial_port, baud_rate=baud_rate)
@@ -64,25 +65,32 @@ class ServoNode(Node):
     def twist_callback(self, msg):
         # Process the Twist message and compute servo positions
         # Map velocities to servo positions
-        servo_positions = np.array([90.0,90.0,90.0,90.0,90.0,90.0])  # Default positions
 
         # Map linear velocities to servos 1-3
         if self.dead_band < msg.linear.x < -self.dead_band:
-            servo_positions[0] = msg.linear.x
+            self.tool_vel[0] = msg.linear.x
+        else:
+            self.tool_vel[0] = 0
+
         if self.dead_band > msg.linear.y > self.dead_band:
-            servo_positions[1] = msg.linear.y
+            self.tool_vel[1] = msg.linear.y
+        else:
+            self.tool_vel[1] = 0
+
         if self.dead_band < msg.linear.z < -self.dead_band:
-            servo_positions[2] = msg.linear.z
+            self.tool_vel[2] = msg.linear.z
+        else:
+            self.tool_vel[2] = 0
 
         # Map angular velocities to servos 4-6
-        servo_positions[3] = msg.angular.x
-        servo_positions[4] = msg.angular.y
-        servo_positions[5] = msg.angular.z
+        self.tool_vel[3] = msg.angular.x
+        self.tool_vel[4] = msg.angular.y
+        self.tool_vel[5] = msg.angular.z
 
         print(f"Received x:{msg.linear.x,} og y:{msg.linear.y}")
 
         #self.arm_control.calculate_joint_vel_array(servo_positions)
-        self.arm_control.integrate_tool_pos(servo_positions)
+        self.arm_control.integrate_tool_pos(self.tool_vel)
 
         print(f"Servo positions: {self.arm_control.tool_pos}")
         solution = self.arm_inv_control.inverse_kinematics(self.arm_control.tool_pos[0], self.arm_control.tool_pos[1], self.arm_control.tool_pos[2])
