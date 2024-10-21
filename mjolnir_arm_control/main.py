@@ -20,7 +20,7 @@ class ServoNode(Node):
         # Declare and get parameters
         self.declare_parameter('serial_port', '/dev/ttyUSB0')
         self.declare_parameter('baud_rate', 115200)
-        self.declare_parameter('cmd_vel_topic', '/cmd_vel')
+        self.declare_parameter('cmd_vel_topic', '/cmd_vel_arm')
         self.declare_parameter('max_linear_velocity', 1.0)
         self.declare_parameter('max_angular_velocity', 1.0)
 
