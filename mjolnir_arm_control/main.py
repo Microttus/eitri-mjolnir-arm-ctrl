@@ -87,7 +87,7 @@ class ServoNode(Node):
         self.tool_vel[4] = msg.angular.y
         self.tool_vel[5] = msg.angular.z
 
-        print(f"Received x:{msg.linear.x,} og y:{msg.linear.y}")
+        print(f"Received x:{msg.linear.x, self.tool_vel[0]} og y:{msg.linear.y, self.tool_vel[1]}")
 
         #self.arm_control.calculate_joint_vel_array(servo_positions)
         self.arm_control.integrate_tool_pos(self.tool_vel)
