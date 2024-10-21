@@ -66,7 +66,7 @@ class ServoNode(Node):
         # Process the Twist message and compute servo positions
         # Map velocities to servo positions
 
-        print(f"This is self.dead_band < msg.linear.x = {self.dead_band < msg.linear.x}")
+        #print(f"This is self.dead_band < msg.linear.x = {self.dead_band < msg.linear.x}")
 
         # Map linear velocities to servos 1-3
         if self.dead_band < msg.linear.x or msg.linear.x < -self.dead_band:
@@ -89,17 +89,17 @@ class ServoNode(Node):
         self.tool_vel[4] = msg.angular.y
         self.tool_vel[5] = msg.angular.z
 
-        print(f"Received x:{msg.linear.x, self.tool_vel[0]} og y:{msg.linear.y, self.tool_vel[1]}")
+        #print(f"Received x:{msg.linear.x, self.tool_vel[0]} og y:{msg.linear.y, self.tool_vel[1]}")
 
         #self.arm_control.calculate_joint_vel_array(servo_positions)
         self.arm_control.integrate_tool_pos(self.tool_vel)
 
-        print(f"Servo positions: {self.arm_control.tool_pos}")
+        print(f"Tool positions: {round(self.arm_control.tool_pos,2)}")
         solution = self.arm_inv_control.inverse_kinematics(self.arm_control.tool_pos[0], self.arm_control.tool_pos[1], self.arm_control.tool_pos[2])
 
         if solution != None:
             self.theta1 = int(solution[0][0])
-            self.theta2 = int(solution[0][1])
+            self.theta2 = 0 #int(solution[0][1])
             self.theta3 = int(solution[0][2])
             self.theta4 = self.theta3
             #print(f"1: {self.theta1}, 2: {theta2}, 3: {theta3}")
