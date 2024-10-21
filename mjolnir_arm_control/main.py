@@ -66,6 +66,8 @@ class ServoNode(Node):
         # Process the Twist message and compute servo positions
         # Map velocities to servo positions
 
+        print(f"This is self.dead_band < msg.linear.x = {self.dead_band < msg.linear.x}")
+
         # Map linear velocities to servos 1-3
         if self.dead_band < msg.linear.x or msg.linear.x < -self.dead_band:
             self.tool_vel[0] = msg.linear.x
