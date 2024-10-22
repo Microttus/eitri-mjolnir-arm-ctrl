@@ -46,7 +46,12 @@ class ServoNode(Node):
         self.get_logger().info(f"Sent initial position to arm controller on port {serial_port}")
 
         self.arm_control = MjolnirArmControl()
-        self.arm_inv_control = RoboticArmIK(0.065, 0.35, 0.304) # TODO: Add joint limits ((-90,90),(-90,90),(-180,0)
+        joint_limits = {
+            'theta1': (-90, 90),
+            'theta2': (-90, 90),
+            'theta3': (-180, 0),
+        }
+        self.arm_inv_control = RoboticArmIK(0.065, 0.35, 0.304, joint_limits) #
         self.theta1 = 90
         self.theta2 = 90
         self.theta3 = 90
