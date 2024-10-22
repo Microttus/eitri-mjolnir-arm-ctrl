@@ -46,7 +46,7 @@ class ServoNode(Node):
         self.get_logger().info(f"Sent initial position to arm controller on port {serial_port}")
 
         self.arm_control = MjolnirArmControl()
-        self.arm_inv_control = RoboticArmIK(0.065, 0.35, 0.304)
+        self.arm_inv_control = RoboticArmIK(0.065, 0.35, 0.304) # TODO: Add joint limits ((-90,90),(-90,90),(-180,0)
         self.theta1 = 90
         self.theta2 = 90
         self.theta3 = 90
@@ -97,12 +97,13 @@ class ServoNode(Node):
         print(f"Tool positions: {round(self.arm_control.tool_pos[0],2), round(self.arm_control.tool_pos[1],2), round(self.arm_control.tool_pos[2],2)}")
         solution = self.arm_inv_control.inverse_kinematics(self.arm_control.tool_pos[0], self.arm_control.tool_pos[1], self.arm_control.tool_pos[2])
 
-        if solution != None:
-            self.theta1 = int(solution[0][0])
-            self.theta2 = 90 #int(solution[0][1])
-            self.theta3 = int(solution[0][2])
-            self.theta4 = self.theta3
-            #print(f"1: {self.theta1}, 2: {theta2}, 3: {theta3}")
+        # Int and correction for servo control
+        if solution is not None:
+            self.theta1 = int(solution[0][0]) + 90
+            self.theta2 = int(solution[0][1]) + 90
+            self.theta3 = int(solution[0][2]) + 180
+            self.theta4 = self.theta3                   # TODO: Add calc for this one
+            #print(f"1: {self.theta1}1 , 2: {theta2}, 3: {theta3}")
         else:
             print("No valid solution")
 
