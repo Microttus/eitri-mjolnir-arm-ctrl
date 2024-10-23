@@ -102,6 +102,8 @@ class ServoNode(Node):
         print(f"Tool positions: {round(self.arm_control.tool_pos[0],2), round(self.arm_control.tool_pos[1],2), round(self.arm_control.tool_pos[2],2)}")
         solution = self.arm_inv_control.inverse_kinematics(self.arm_control.tool_pos[0], self.arm_control.tool_pos[1], self.arm_control.tool_pos[2])
 
+        self.get_logger().info(f"Inverse kinematics: {solution}")
+
         # Int and correction for servo control
         if solution is not None:
             self.theta1 = int(solution[0][0]) + 90

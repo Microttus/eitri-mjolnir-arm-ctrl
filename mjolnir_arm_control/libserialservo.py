@@ -43,8 +43,6 @@ class ServoController:
         # Convert the list of servo values into a comma-separated string
         servo_data = ','.join(map(str, servo_values)) + '\n'
 
-        print(f"Sent string: {servo_data}")
-
         try:
             self.serial_connection.write(servo_data.encode())
             time.sleep(0.3)
