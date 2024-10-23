@@ -115,7 +115,7 @@ class ServoNode(Node):
             print("No valid solution")
 
         # Array the solution
-        servo_motor_pos = np.array([self.theta1, self.theta2, self.theta3, self.theta4, 0, 0])
+        servo_motor_pos = np.array([self.theta1, self.theta2, 0, self.theta3, 0, self.theta4])
 
         # Send servo positions
         try:
