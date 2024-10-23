@@ -1,7 +1,11 @@
 Metadata-Version: 2.1
 Name: mjolnir-arm-control
 Version: 0.1.0
-Summary: Arm control package
-Maintainer: IceCube
-Maintainer-email: marinto@uia.no
-License: MIT Licence
+Summary: Contol of Mjolnir arm
+Maintainer: oktma
+Maintainer-email: martino@uia.no
+License: MIT
+License-File: LICENSE
+Requires-Dist: setuptools
+Requires-Dist: pyserial
+Requires-Dist: numpy
