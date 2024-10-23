@@ -109,7 +109,7 @@ class ServoNode(Node):
             self.theta1 = int(solution[0][0]) + 90
             self.theta2 = int(solution[0][1]) + 90
             self.theta3 = int(solution[0][2])
-            self.theta4 = (90 - int(solution[0][1]) - int(solution[0][2]))
+            self.theta4 = int(solution[0][1]) + int(solution[0][2]) #(-90 - int(solution[0][1]) - int(solution[0][2]))
             #print(f"1: {self.theta1}1 , 2: {theta2}, 3: {theta3}")
         else:
             print("No valid solution")
