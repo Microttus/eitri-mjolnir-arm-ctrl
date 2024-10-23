@@ -49,7 +49,7 @@ class ServoNode(Node):
         joint_limits = {
             'theta1': (-90, 90),
             'theta2': (-90, 90),
-            'theta3': (-180, 0),
+            'theta3': (0, 180),
         }
         self.arm_inv_control = RoboticArmIK(0.065, 0.35, 0.304, joint_limits) #
         self.theta1 = 90
