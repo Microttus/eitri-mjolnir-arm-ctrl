@@ -18,7 +18,7 @@ class ServoNode(Node):
         super().__init__('servo_node')
 
         # Declare and get parameters
-        self.declare_parameter('serial_port', '/dev/ttyACM0')
+        self.declare_parameter('serial_port', '/dev/serial/by-id/usb-1a86_USB_Single_Serial_5713008361-if00')
         self.declare_parameter('baud_rate', 115200)
         self.declare_parameter('cmd_vel_topic', '/ArmTwist')
         self.declare_parameter('max_linear_velocity', 1.0)
