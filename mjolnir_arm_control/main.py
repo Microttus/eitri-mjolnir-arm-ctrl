@@ -5,6 +5,7 @@
 # 25/9 - 24
 #
 
+import os
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
@@ -30,6 +31,11 @@ class ServoNode(Node):
         self.max_linear_velocity = self.get_parameter('max_linear_velocity').value
         self.max_angular_velocity = self.get_parameter('max_angular_velocity').value
 
+        # Check for debug
+        self.debug_log = self.get_env_as_bool('DEBUG_LOG', False)
+        if self.debug_log:
+            self.get_logger().info("Debug log enabled")
+
         self.dead_band = 0.01
         self.tool_vel =  np.array([ 0.1, 0.0, 0.1, 0.0, 0.0, 0.0])
 
@@ -51,11 +57,11 @@ class ServoNode(Node):
             'theta2': (-90, 90),
             'theta3': (0, 180),
         }
-        self.arm_inv_control = RoboticArmIK(0.065, 0.35, 0.304, joint_limits) #
-        self.theta1 = 90
-        self.theta2 = 90
-        self.theta3 = 90
-        self.theta4 = 90
+        #self.arm_inv_control = RoboticArmIK(0.065, 0.35, 0.304, joint_limits) #
+        self.theta1 = 90.0  # <- Servo 1
+        self.theta2 = 0.0   # <- DC-motor extender
+        self.theta3 = 90.0  # <- Servo 2
+        self.theta4 = 90.0  # <- ?
 
         # Subscribe to the Twist topic
         self.subscription = self.create_subscription(
@@ -66,6 +72,18 @@ class ServoNode(Node):
         )
 
         self.get_logger().info(f"Servo node initialized. Listening to {self.cmd_vel_topic}")
+
+    def get_env_as_bool(self, env_var, default_value):
+        value = os.getenv(env_var, None)
+
+        if value is None:
+            return default_value  # Environment variable is not set, return default
+
+        # Try to convert the value to a boolean
+        try:
+            return value.lower() in ['1', 'true', 'yes', 'on']
+        except AttributeError:
+            return default_value  # Value is not a string, fallback to default
 
     def twist_callback(self, msg):
         # Process the Twist message and compute servo positions
@@ -96,32 +114,40 @@ class ServoNode(Node):
 
         #print(f"Received x:{msg.linear.x, self.tool_vel[0]} og y:{msg.linear.y, self.tool_vel[1]}")
 
-        #self.arm_control.calculate_joint_vel_array(servo_positions)
-        self.arm_control.integrate_tool_pos(self.tool_vel)
+        #Anglular 1
+        self.theta1 += self.tool_vel[0]
+        self.theta1 = np.clip(self.theta1, 0, 180)
 
-        print(f"Tool positions: {round(self.arm_control.tool_pos[0],2), round(self.arm_control.tool_pos[1],2), round(self.arm_control.tool_pos[2],2)}")
-        solution = self.arm_inv_control.inverse_kinematics(self.arm_control.tool_pos[0], self.arm_control.tool_pos[1], self.arm_control.tool_pos[2])
+        #Linear 2
+        self.theta2 = self.tool_vel[2]
+        self.theta2 = np.clip(self.theta2, -254, 254)
 
-        self.get_logger().info(f"Inverse kinematics: {solution}")
+        #Angular 3
+        self.theta3 = self.tool_vel[3]
+        self.theta3 = np.clip(self.theta3, 0, 180)
+
+        #Angular 4
+        self.theta4 = self.tool_vel[1]
+        self.theta4 = np.clip(self.theta4, 0, 180)
+
+        if self.debug_log:
+            self.get_logger().info(f"Calculated angles: {self.theta1}, {self.theta2}, {self.theta3}, {self.theta4}")
 
         # Int and correction for servo control
-        if solution is not None:
-            self.theta1 = int(solution[0][0]) + 90
-            self.theta2 = int(solution[0][1]) + 90
-            self.theta3 = int(solution[0][2])
-            self.theta4 = int(solution[0][1]) + int(solution[0][2]) #(-90 - int(solution[0][1]) - int(solution[0][2]))
-            #print(f"1: {self.theta1}1 , 2: {theta2}, 3: {theta3}")
-        else:
-            print("No valid solution")
+        servo_theta1 = int(self.theta1)
+        servo_theta2 = int(self.theta2)
+        servo_theta3 = int(self.theta3)
+        servo_theta4 = int(self.theta4)
 
         # Array the solution
-        servo_motor_pos = np.array([self.theta1, self.theta2, 0, self.theta3, 0, self.theta4])
+        servo_motor_pos = np.array([servo_theta1, servo_theta2, 0, servo_theta3, 0, servo_theta4])
 
         # Send servo positions
         try:
             #self.servo_controller.send_servo_values(self.arm_control.motor_pos)
             self.servo_controller.send_servo_values(servo_motor_pos)
-            self.get_logger().info(f"Sent servo positions: {servo_motor_pos}")
+            if self.debug_log:
+                self.get_logger().info(f"Sent servo positions: {servo_motor_pos}")
         except Exception as e:
             self.get_logger().error(f"Error sending servo positions: {e}")
 
