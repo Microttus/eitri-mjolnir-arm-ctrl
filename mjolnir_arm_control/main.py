@@ -119,15 +119,15 @@ class ServoNode(Node):
         self.theta1 = np.clip(self.theta1, 0, 180)
 
         #Linear 2
-        self.theta2 = self.tool_vel[2]
+        self.theta2 = self.tool_vel[2] * 200.0
         self.theta2 = np.clip(self.theta2, -254, 254)
 
         #Angular 3
-        self.theta3 = self.tool_vel[3]
+        self.theta3 += self.tool_vel[3]
         self.theta3 = np.clip(self.theta3, 0, 180)
 
         #Angular 4
-        self.theta4 = self.tool_vel[1]
+        self.theta4 += self.tool_vel[1]
         self.theta4 = np.clip(self.theta4, 0, 180)
 
         if self.debug_log:
