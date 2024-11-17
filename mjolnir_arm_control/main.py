@@ -51,13 +51,9 @@ class ServoNode(Node):
         self.servo_controller.send_servo_values([90,90,90,90,90,90])
         self.get_logger().info(f"Sent initial position to arm controller on port {serial_port}")
 
-        self.arm_control = MjolnirArmControl()
-        joint_limits = {
-            'theta1': (-90, 90),
-            'theta2': (-90, 90),
-            'theta3': (0, 180),
-        }
+        #self.arm_control = MjolnirArmControl(
         #self.arm_inv_control = RoboticArmIK(0.065, 0.35, 0.304, joint_limits) #
+
         self.theta1 = 90.0  # <- Servo 1
         self.theta2 = 0.0   # <- DC-motor extender
         self.theta3 = 90.0  # <- Servo 2
@@ -127,7 +123,7 @@ class ServoNode(Node):
         self.theta3 = np.clip(self.theta3, 0, 180)
 
         #Angular 4
-        self.theta4 += self.tool_vel[1]
+        self.theta4 += self.tool_vel[4]
         self.theta4 = np.clip(self.theta4, 0, 180)
 
         if self.debug_log:
