@@ -110,12 +110,12 @@ class ServoNode(Node):
 
         #print(f"Received x:{msg.linear.x, self.tool_vel[0]} og y:{msg.linear.y, self.tool_vel[1]}")
 
-        #Anglular 1
-        self.theta1 += self.tool_vel[0]
-        self.theta1 = np.clip(self.theta1, 0, 180)
+        #Linear 1
+        self.theta1 = self.tool_vel[0] * 250.0
+        self.theta1 = np.clip(self.theta1, -254, 254)
 
         #Linear 2
-        self.theta2 = self.tool_vel[2] * 200.0
+        self.theta2 = self.tool_vel[2] * 250.0
         self.theta2 = np.clip(self.theta2, -254, 254)
 
         #Angular 3
@@ -123,11 +123,17 @@ class ServoNode(Node):
         self.theta3 = np.clip(self.theta3, 0, 180)
 
         #Angular 4
-        self.theta4 += self.tool_vel[3]
+        self.theta4 += self.tool_vel[5]
         self.theta4 = np.clip(self.theta4, 0, 180)
 
+        #Magnet 5
+        if self.tool_vel[4] >= 0.9:
+            magnet = 1.0
+        else:
+            magnet = 0.0
+
         if self.debug_log:
-            self.get_logger().info(f"Calculated angles: {self.theta1}, {self.theta2}, {self.theta3}, {self.theta4}")
+            self.get_logger().info(f"Calculated angles: {self.theta1}, {self.theta2}, {self.theta3}, {self.theta4}, {magnet}")
 
         # Int and correction for servo control
         servo_theta1 = int(self.theta1)
@@ -136,7 +142,7 @@ class ServoNode(Node):
         servo_theta4 = int(self.theta4)
 
         # Array the solution
-        servo_motor_pos = np.array([servo_theta1, servo_theta2, 0, servo_theta3, 0, servo_theta4])
+        servo_motor_pos = np.array([servo_theta1, servo_theta2, 0, servo_theta3, magnet, servo_theta4])
 
         # Send servo positions
         try:
