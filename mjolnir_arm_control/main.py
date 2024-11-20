@@ -59,6 +59,8 @@ class ServoNode(Node):
         self.theta3 = 90.0  # <- Servo 2
         self.theta4 = 90.0  # <- ?
 
+        self.last_mag = 0.0
+
         # Subscribe to the Twist topic
         self.subscription = self.create_subscription(
             Twist,
@@ -131,6 +133,13 @@ class ServoNode(Node):
             magnet = 1.0
         else:
             magnet = 0.0
+
+        if self.tool_vel[4] == 0.0 and self.last_mag == 0.0:
+            magnet = 0.0
+        else:
+            magnet = 1.0
+
+        self.last_mag = magnet
 
         if self.debug_log:
             self.get_logger().info(f"Calculated angles: {self.theta1}, {self.theta2}, {self.theta3}, {self.theta4}, {magnet}")
