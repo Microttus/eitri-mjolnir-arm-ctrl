@@ -129,7 +129,7 @@ class ServoNode(Node):
         self.theta4 = np.clip(self.theta4, 0, 180)
 
         #Magnet 5
-        if self.tool_vel[4] >= 0.9:
+        if self.tool_vel[4] <= 0.0:
             magnet = 1.0
         else:
             magnet = 0.0
